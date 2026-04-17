@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GEENERICO - Sitio Base</title>
+    <title>GEENERICO - Club privado con identidad clara</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -150,6 +150,16 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+        }
+        .section-lead {
+            color: var(--text-main);
+            max-width: 70ch;
+            line-height: 1.7;
+            margin: -8px 0 22px;
+            font-size: 0.98rem;
+        }
+        .section-lead strong {
+            color: var(--accent-strong);
         }
         .historia-content {
             display: flex;
@@ -931,11 +941,11 @@
                 
                 <!-- TEXTO DEBAJO -->
                 <div class="historia-texto historia-texto-principal">
-                    <p style="text-align: center;"><strong>GEENERICO</strong> nace con una premisa clara: ofrecer una experiencia de club más cuidada, ordenada y confiable. Cada variedad, cada novedad y cada instancia de contacto fue pensada para transmitir criterio, cercanía y una estética consistente.</p>
+                    <p style="text-align: center;"><strong>GEENERICO</strong> nace con una premisa clara: ofrecer una experiencia de club más ordenada, clara y confiable. Cada sección fue pensada para comunicar mejor, dar tranquilidad en el acceso y sostener una identidad cuidada en cada punto de contacto.</p>
                     
                     <div id="historia-adicional" style="display: none;">
-    <p style="text-align: center;">El foco está puesto en la selección curada, la presentación prolija y una comunicación simple para socios. Buscamos que la experiencia se sienta clara desde el primer vistazo: catálogo legible, información útil y una identidad reconocible en todos los puntos de contacto.</p>
-    <p style="text-align: center;">GEENERICO está pensado como un club moderno: más profesional en su forma de comunicar, más consistente en su estética y más ágil en la gestión cotidiana. La idea es construir confianza, orden y una percepción de calidad sostenida en el tiempo.</p>
+    <p style="text-align: center;">El foco está puesto en una selección curada, una presentación prolija y una comunicación simple para socios. Buscamos que la experiencia se entienda rápido: catálogo legible, novedades útiles y una operación diaria con menos fricción.</p>
+    <p style="text-align: center;">GEENERICO está pensado como un club moderno: más claro para quien ingresa, más consistente para quien administra y más sólido para quien evalúa la propuesta como marca o proyecto comercial.</p>
 </div>
                     
                     <div class="historia-toggle">
@@ -975,36 +985,38 @@
                     </div>
                     
                     <div class="historia-cifras">
-                        <div class="cifra"><span class="cifra-numero" id="cifra-socios">+250</span><span class="cifra-texto">Socios activos</span></div>
-                        <div class="cifra"><span class="cifra-numero" id="cifra-cepas">6</span><span class="cifra-texto">Variedades destacadas</span></div>
-                        <div class="cifra"><span class="cifra-numero" id="cifra-anios">4</span><span class="cifra-texto">Años de desarrollo</span></div>
+                        <div class="cifra"><span class="cifra-numero" id="cifra-socios">+250</span><span class="cifra-texto">Socios con acceso</span></div>
+                        <div class="cifra"><span class="cifra-numero" id="cifra-cepas">6</span><span class="cifra-texto">Selecciones activas</span></div>
+                        <div class="cifra"><span class="cifra-numero" id="cifra-anios">4</span><span class="cifra-texto">Etapas de evolución</span></div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="beneficios-grid">
             <article class="beneficio-card">
-                <h3>Selección Curada</h3>
-                <p>Un catálogo breve y claro, pensado para priorizar variedad, criterio visual y comunicación ordenada para socios.</p>
+                <h3>Catálogo Enfocado</h3>
+                <p>Una selección breve y bien presentada para que cada variedad tenga lugar, contexto y mejor percepción de valor.</p>
             </article>
             <article class="beneficio-card">
-                <h3>Experiencia Cuidada</h3>
-                <p>Desde la navegación hasta la presentación de cada ficha, todo busca transmitir prolijidad, confianza y consistencia.</p>
+                <h3>Experiencia Clara</h3>
+                <p>Desde el acceso hasta cada ficha, todo busca transmitir orden, confianza y una navegación fácil de entender.</p>
             </article>
             <article class="beneficio-card">
-                <h3>Gestión Simple</h3>
-                <p>El sistema está preparado para que el club pueda actualizar contenido, catálogo y comunicaciones sin fricción.</p>
+                <h3>Gestión Comercial</h3>
+                <p>El sistema acompaña al club para publicar contenido, mantener el catálogo al día y comunicar novedades sin depender de terceros.</p>
             </article>
         </div>
         <h2 class="section-title" style="margin-top: 30px;">
             <i class="fas fa-newspaper"></i> Novedades
         </h2>
+        <p class="section-lead">Comunicados, lanzamientos y actualizaciones pensadas para mantener al club activo, visible y con una comunicación más ordenada.</p>
         <div id="noticias-container" class="noticias-grid">
             <div class="loading">Cargando noticias...</div>
         </div>
         <h2 class="section-title" style="margin-top: 30px;">
             <i class="fas fa-calendar-alt"></i> Actividades
         </h2>
+        <p class="section-lead">Espacios para anunciar encuentros, acciones especiales, sorteos y movimientos del club con una lectura rápida y directa.</p>
         <div id="actividades-container" class="actividades-grid">
             <div class="loading">Cargando actividades...</div>
         </div>
@@ -1013,9 +1025,11 @@
     <!-- PRODUCTOS -->
     <div id="productos" class="section" style="display: none;">
         <h2 class="section-title"><i class="fas fa-leaf"></i> Catálogo</h2>
+        <p class="section-lead"><strong>Una selección breve, visual y bien explicada.</strong> La idea no es mostrar de más, sino presentar mejor cada variedad y facilitar la consulta para socios.</p>
         <div id="productos-container" class="productos-grid"><div class="loading">Cargando productos...</div></div>
         <div id="productosProximasEntregas" class="productos-subsection">
             <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Próximos Retiros</h2>
+            <p class="section-lead">Fechas visibles y ordenadas para que cada socio entienda rápido cuándo puede confirmar o retirar.</p>
             <div id="calendarioProductos" class="calendario-grid"><div class="loading">Cargando fechas...</div></div>
         </div>
         <div id="productosMisReservas" class="productos-subsection" style="display: none;">
@@ -1029,12 +1043,13 @@
     <!-- LOGIN -->
     <div id="login" class="section" style="display: none;">
         <h2 class="section-title"><i class="fas fa-lock"></i> Acceso Socios</h2>
+        <p class="section-lead">Acceso simple para socios registrados, administradores y responsables del club. Todo el circuito está pensado para resolver ingreso, recuperación y gestión desde un mismo lugar.</p>
         <div style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid rgba(100,140,75,0.3); padding-bottom: 10px;">
             <button id="tabLogin" class="btn-submit" style="background: #7ca35a;">🔐 Iniciar Sesión</button>
             <button id="tabRegister" class="btn-submit" style="background: rgba(100,140,75,0.3);">📝 Registrarse</button>
         </div>
         <div id="panelLogin">
-            <p style="color: #c8d8b5; margin-bottom: 20px;">Ingresá con tu email y contraseña.</p>
+            <p style="color: #c8d8b5; margin-bottom: 20px;">Ingresá con tu email y contraseña para acceder a tu espacio, revisar el catálogo y gestionar tus retiros.</p>
             <form id="formLoginPassword" style="max-width: 400px;">
                 <div class="form-group"><label>Email *</label><input type="email" id="loginEmailPassword" required></div>
                 <div class="form-group"><label>Contraseña *</label><input type="password" id="loginPassword" required></div>
@@ -1043,7 +1058,7 @@
             </form>
         </div>
         <div id="panelRegister" style="display: none;">
-            <p style="color: #c8d8b5; margin-bottom: 20px;">¿Ya solicitaste tu membresía? Ingresá tu email para crear tu contraseña.</p>
+            <p style="color: #c8d8b5; margin-bottom: 20px;">Si ya formás parte del club, ingresá tu email para activar tu acceso y definir tu contraseña.</p>
             <form id="formRegisterMagic" style="max-width: 400px;">
                 <div class="form-group"><label>Email *</label><input type="email" id="registerEmail" required></div>
                 <button type="submit" class="btn-submit"><i class="fas fa-envelope"></i> Enviar enlace para crear contraseña</button>
@@ -1054,7 +1069,7 @@
             </div>
         </div>
         <div id="panelForgot" style="display: none;">
-            <p style="color: #c8d8b5; margin-bottom: 20px;">Ingresá tu email para restablecer tu contraseña.</p>
+            <p style="color: #c8d8b5; margin-bottom: 20px;">Ingresá tu email y te enviaremos un enlace para recuperar el acceso de forma segura.</p>
             <form id="formForgotMagic" style="max-width: 400px;">
                 <div class="form-group"><label>Email *</label><input type="email" id="forgotEmail" required></div>
                 <button type="submit" class="btn-submit"><i class="fas fa-envelope"></i> Enviar enlace de restablecimiento</button>
@@ -1138,8 +1153,8 @@
     </div>
     
     <div class="footer">
-        <p>🌿 GEENERICO · Club cannábico privado · Identidad y gestión profesional 🌿</p>
-        <p style="font-size: 0.7rem;">© 2025 · Comunicación interna del club · Todos los derechos reservados</p>
+        <p>GEENERICO · Plataforma de club privado con identidad clara, catálogo ordenado y gestión profesional.</p>
+        <p style="font-size: 0.7rem;">Proyecto demostrativo preparado para presentar marca, operación y experiencia de socios en un solo entorno.</p>
     </div>
 </div>
 

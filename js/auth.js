@@ -37,6 +37,8 @@ async function actualizarUIporRol() {
     } else {
         appState.rolUsuario = 'invitado';
         appState.socioData = null;
+        appState.gramosReservadosCiclo = 0;
+        appState.cicloClubActual = null;
         document.getElementById('userName').innerHTML = '<i class="fas fa-user"></i> Invitado';
         document.getElementById('btnLogin').style.display = 'inline-block';
         document.getElementById('btnLogout').style.display = 'none';

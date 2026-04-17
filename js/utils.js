@@ -131,6 +131,54 @@ function puedeConfirmar(fechaEntrega, horasLimite) {
     return ahora <= fechaLimite;
 }
 
+function normalizarFechaSinHora(fecha) {
+    const valor = new Date(fecha);
+    valor.setHours(0, 0, 0, 0);
+    return valor;
+}
+
+function obtenerUltimoJuevesDelMes(anio, mes) {
+    const ultimoDia = new Date(anio, mes + 1, 0);
+    ultimoDia.setHours(0, 0, 0, 0);
+    while (ultimoDia.getDay() !== 4) ultimoDia.setDate(ultimoDia.getDate() - 1);
+    return ultimoDia;
+}
+
+function formatearFechaClave(fecha) {
+    return `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
+}
+
+function obtenerCicloClub(fechaReferencia = new Date()) {
+    const referencia = normalizarFechaSinHora(fechaReferencia);
+    const ultimoJuevesMesActual = obtenerUltimoJuevesDelMes(referencia.getFullYear(), referencia.getMonth());
+
+    let inicio;
+    if (referencia >= ultimoJuevesMesActual) {
+        inicio = ultimoJuevesMesActual;
+    } else {
+        const fechaMesAnterior = new Date(referencia.getFullYear(), referencia.getMonth() - 1, 1);
+        inicio = obtenerUltimoJuevesDelMes(fechaMesAnterior.getFullYear(), fechaMesAnterior.getMonth());
+    }
+
+    const siguienteInicio = obtenerUltimoJuevesDelMes(inicio.getFullYear(), inicio.getMonth() + 1);
+    const fin = new Date(siguienteInicio);
+    fin.setDate(fin.getDate() - 1);
+    fin.setHours(23, 59, 59, 999);
+
+    return {
+        inicio,
+        fin,
+        clave: `${formatearFechaClave(inicio)}_${formatearFechaClave(normalizarFechaSinHora(fin))}`,
+        etiqueta: `${inicio.toLocaleDateString('es-UY')} al ${normalizarFechaSinHora(fin).toLocaleDateString('es-UY')}`
+    };
+}
+
+function fechaEstaEnCicloClub(fecha, ciclo = obtenerCicloClub()) {
+    if (!fecha) return false;
+    const valor = new Date(fecha);
+    return valor >= ciclo.inicio && valor <= ciclo.fin;
+}
+
 function obtenerClaveMesActual() {
     const hoy = new Date();
     return `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
@@ -377,6 +425,8 @@ window.obtenerImagenPrincipal = obtenerImagenPrincipal;
 window.construirHTMLGaleriaHorizontal = construirHTMLGaleriaHorizontal;
 window.normalizarProductoDemo = normalizarProductoDemo;
 window.aplicarTemaDesdeLogo = aplicarTemaDesdeLogo;
+window.obtenerCicloClub = obtenerCicloClub;
+window.fechaEstaEnCicloClub = fechaEstaEnCicloClub;
 window.seleccionarHistoriaImagen = function(indice) {
     const historiaMedia = document.getElementById('historiaMediaPrincipal');
     if (!historiaMedia || !Array.isArray(appState.historiaGaleria) || !appState.historiaGaleria[indice]) return;

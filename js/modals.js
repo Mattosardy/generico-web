@@ -12,10 +12,14 @@ function guardarPedidosProductos(pedidos) {
 
 function obtenerTotalPedidoMesActual() {
     const socioId = obtenerIdentificadorSocioPedido();
-    const mesActual = obtenerClaveMesActual();
+    const cicloActual = obtenerCicloClub();
     return obtenerPedidosProductos()
-        .filter((pedido) => pedido.socio_id === socioId && pedido.mes === mesActual)
-        .reduce((acc, pedido) => acc + Number(pedido.gramos || 0), 0);
+        .filter((pedido) => {
+            if (pedido.socio_id !== socioId) return false;
+            if (pedido.ciclo === cicloActual.clave) return true;
+            return fechaEstaEnCicloClub(pedido.fecha, cicloActual);
+        })
+        .reduce((acc, pedido) => acc + Number(pedido.gramos || 0), 0) + Number(appState.gramosReservadosCiclo || 0);
 }
 
 function actualizarEstadoPedidoModal() {
@@ -25,7 +29,8 @@ function actualizarEstadoPedidoModal() {
     const botonEl = document.getElementById('btnRealizarPedido');
     if (!restanteEl || !alertaEl || !botonEl) return;
 
-    restanteEl.textContent = `Disponible este mes: ${restante}g de 40g`;
+    const cicloActual = obtenerCicloClub();
+    restanteEl.textContent = `Disponible en este ciclo (${cicloActual.etiqueta}): ${restante}g de 40g`;
     alertaEl.textContent = '';
     document.querySelectorAll('#opcionesPedido .opcion-pedido').forEach((btn) => {
         const gramos = Number(btn.dataset.gramos);
@@ -40,7 +45,7 @@ function actualizarEstadoPedidoModal() {
     }
 
     if (appState.gramosSeleccionadosPedido > restante) {
-        alertaEl.textContent = `No podes pedir ${appState.gramosSeleccionadosPedido}g. Te quedan ${restante}g.`;
+        alertaEl.textContent = `No podes pedir ${appState.gramosSeleccionadosPedido}g. Te quedan ${restante}g en este ciclo.`;
         botonEl.disabled = true;
         return;
     }
@@ -56,7 +61,7 @@ function inicializarPedidoModal() {
             const precio = Number(btn.dataset.precio);
             const restante = 40 - obtenerTotalPedidoMesActual();
             if (gramos > restante) {
-                mostrarMensaje(`Te quedan ${restante}g disponibles.`, false);
+                mostrarMensaje(`Te quedan ${restante}g disponibles en este ciclo.`, false);
                 return;
             }
             appState.gramosSeleccionadosPedido = gramos;
@@ -82,7 +87,7 @@ function realizarPedidoProducto() {
     }
     const totalActual = obtenerTotalPedidoMesActual();
     if (totalActual + appState.gramosSeleccionadosPedido > 40) {
-        mostrarMensaje(`Ya llevas ${totalActual}g este mes.`, false);
+        mostrarMensaje(`Ya llevas ${totalActual}g en este ciclo.`, false);
         return;
     }
 
@@ -93,7 +98,7 @@ function realizarPedidoProducto() {
         producto_id: appState.productoModalActual.id,
         producto_nombre: appState.productoModalActual.nombre,
         gramos: appState.gramosSeleccionadosPedido,
-        mes: obtenerClaveMesActual(),
+        ciclo: obtenerCicloClub().clave,
         fecha: new Date().toISOString(),
         estado: 'pendiente'
     });

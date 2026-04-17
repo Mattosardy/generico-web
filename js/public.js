@@ -21,12 +21,12 @@ function normalizarNoticiaDemo(noticia = {}) {
     const textoOriginal = `${noticia?.titulo || ''} ${noticia?.contenido || ''}`.toLowerCase();
     const esContenidoHeredado = textoOriginal.includes('cururu') || textoOriginal.includes('cururú');
     const titulo = esContenidoHeredado
-        ? 'Proximamente'
-        : (String(noticia?.titulo || '').trim() || 'Proximamente');
+        ? 'Próximamente'
+        : (String(noticia?.titulo || '').trim() || 'Próximamente');
     const contenidoBase = esContenidoHeredado
         ? ''
         : String(noticia?.contenido || '').trim();
-    const contenido = contenidoBase || `Sitio en construccion, estamos agregando contenido para ${titulo.toLowerCase()}.`;
+    const contenido = contenidoBase || `Estamos preparando contenido para ${titulo.toLowerCase()} con novedades, contexto y una presentación más clara para socios.`;
     const imagenes = normalizarListaImagenes(noticia?.imagen_url);
 
     return {
@@ -77,7 +77,7 @@ function formatearFechaNoticia(fecha) {
 
 function obtenerIntroNoticia(contenido) {
     const texto = (contenido || '').replace(/\s+/g, ' ').trim();
-    if (!texto) return 'Hacé clic para ver la novedad completa...';
+    if (!texto) return 'Abrí la ficha para ver el contenido completo.';
     if (texto.length <= 135) return `${texto}...`;
     return `${texto.slice(0, 135).trimEnd()}...`;
 }
@@ -122,7 +122,7 @@ async function cargarNoticias() {
 
     const noticias = await obtenerNoticias();
     if (!noticias?.length) {
-        container.innerHTML = '<p style="color: #c8d8b5;">No hay noticias disponibles.</p>';
+        container.innerHTML = '<p style="color: #c8d8b5;">Estamos preparando novedades para comunicar lanzamientos, anuncios y actualizaciones del club.</p>';
         return;
     }
 
@@ -159,7 +159,7 @@ async function cargarActividadesPublicas() {
 
     const actividades = await obtenerActividades();
     if (!actividades?.length) {
-        container.innerHTML = '<p style="color: #c8d8b5;">No hay actividades programadas.</p>';
+        container.innerHTML = '<p style="color: #c8d8b5;">Próximamente vas a ver aquí actividades, sorteos y acciones especiales del club.</p>';
         return;
     }
 
@@ -206,7 +206,7 @@ async function cargarProductosPublicos() {
         const imagenes = normalizarListaImagenes(producto.imagen_url);
         const imagenPrincipal = imagenes[0] || obtenerImagenFallback(producto) || crearPlaceholderConstruccion('Sitio en construcción');
         const disponible = producto.disponible !== false;
-        const indicaSativa = producto.indica_sativa || 'Perfil curado del club';
+        const indicaSativa = producto.indica_sativa || 'Selección destacada del club';
 
         return `
             <div class="producto-card" data-producto='${JSON.stringify(producto).replace(/'/g, '&#39;')}'>
@@ -339,7 +339,7 @@ function obtenerImagenesNoticia(noticia) {
 
 function obtenerIntroNoticia(contenido) {
     const texto = (contenido || '').replace(/\s+/g, ' ').trim();
-    if (!texto) return 'Sitio en construccion, estamos agregando contenido para esta novedad...';
+    if (!texto) return 'Abrí la ficha para ver el contenido completo.';
     if (texto.length <= 135) return `${texto}...`;
     return `${texto.slice(0, 135).trimEnd()}...`;
 }
@@ -350,7 +350,7 @@ async function cargarNoticias() {
 
     const noticias = await obtenerNoticias();
     if (!noticias?.length) {
-        container.innerHTML = '<p style="color: #c8d8b5;">No hay noticias disponibles.</p>';
+        container.innerHTML = '<p style="color: #c8d8b5;">Estamos preparando novedades para comunicar lanzamientos, anuncios y actualizaciones del club.</p>';
         return;
     }
 
@@ -362,11 +362,11 @@ async function cargarNoticias() {
         return `
             <article class="noticia-card" data-noticia='${payload}'>
                 <div class="noticia-miniatura">
-                    <img src="${imagenes[0]}" alt="${escapeHtml(noticia.titulo || 'Proximamente')}" onerror="this.onerror=null; this.src='${IMAGEN_DEFAULT_NOVEDAD}';">
+                    <img src="${imagenes[0]}" alt="${escapeHtml(noticia.titulo || 'Próximamente')}" onerror="this.onerror=null; this.src='${IMAGEN_DEFAULT_NOVEDAD}';">
                 </div>
                 <div class="noticia-body">
                     <div class="noticia-fecha">${escapeHtml(formatearFechaNoticia(noticia.fecha_publicacion))}</div>
-                    <h3 class="noticia-titulo">${escapeHtml(noticia.titulo || 'Proximamente')}</h3>
+                    <h3 class="noticia-titulo">${escapeHtml(noticia.titulo || 'Próximamente')}</h3>
                     <p class="noticia-contenido">${escapeHtml(intro)}</p>
                     <div class="noticia-cta"><i class="fas fa-arrow-right"></i> Ver más</div>
                 </div>
@@ -398,7 +398,7 @@ window.abrirNoticiaModal = function(noticia) {
     media.innerHTML = construirHTMLGaleriaHorizontal(imagenes, {
         imagenPrincipalId: 'noticiaModalImagenPrincipal',
         onSelect: 'seleccionarImagenNoticia',
-        titulo: noticiaNormalizada.titulo || 'Proximamente'
+        titulo: noticiaNormalizada.titulo || 'Próximamente'
     });
 
     const principal = document.getElementById('noticiaModalImagenPrincipal');
@@ -409,10 +409,10 @@ window.abrirNoticiaModal = function(noticia) {
         };
     }
 
-    titulo.textContent = noticiaNormalizada.titulo || 'Proximamente';
+    titulo.textContent = noticiaNormalizada.titulo || 'Próximamente';
     fecha.textContent = formatearFechaNoticia(noticiaNormalizada.fecha_publicacion);
     autor.textContent = noticiaNormalizada.autor ? `Por ${noticiaNormalizada.autor}` : '';
-    contenido.textContent = noticiaNormalizada.contenido || 'Sitio en construccion, estamos agregando contenido para esta novedad.';
+    contenido.textContent = noticiaNormalizada.contenido || 'Estamos preparando esta novedad con mejor contexto y una presentación más clara para socios.';
 
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';

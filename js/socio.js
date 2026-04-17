@@ -1,3 +1,17 @@
+function sumarGramosReservadosEnCiclo(reservas = [], ciclo = obtenerCicloClub()) {
+    return reservas
+        .filter((reserva) => reserva?.estado !== 'cancelado' && fechaEstaEnCicloClub(reserva?.fecha_retiro, ciclo))
+        .reduce((total, reserva) => total + Number(reserva?.cantidad_gramos || 0), 0);
+}
+
+function construirOpcionesReservaHTML(gramosDisponibles, tipo) {
+    const opciones = [20, 40].filter((gramos) => gramos <= gramosDisponibles);
+    if (!opciones.length) {
+        return '<div class="estado-reserva estado-pendiente">Tope mensual alcanzado</div>';
+    }
+    return `<div class="opciones-gramos" data-tipo="${tipo}">${opciones.map((gramos) => `<div class="opcion-gramo" data-gramos="${gramos}">${gramos}g</div>`).join('')}</div>`;
+}
+
 async function renderProximasEntregasEnProductos() {
     const proximasWrapper = document.getElementById('productosProximasEntregas');
     if (proximasWrapper) proximasWrapper.style.display = 'block';
@@ -13,10 +27,8 @@ async function renderProximasEntregasEnProductos() {
     if (appState.socioData?.id) {
         try {
             const reservas = await obtenerReservas(appState.socioData.id);
-            const mesActual = fechas.primerJueves.getMonth() + 1;
-            const anioActual = fechas.primerJueves.getFullYear();
-            reservaPrimer = reservas.find((r) => r.tipo_entrega === 'primer_jueves' && r.mes === mesActual && r.año === anioActual);
-            reservaUltimo = reservas.find((r) => r.tipo_entrega === 'ultimo_jueves' && r.mes === mesActual && r.año === anioActual);
+            reservaPrimer = reservas.find((r) => r.tipo_entrega === 'primer_jueves' && String(r.fecha_retiro) === fechas.primerJueves.toISOString().slice(0, 10));
+            reservaUltimo = reservas.find((r) => r.tipo_entrega === 'ultimo_jueves' && String(r.fecha_retiro) === fechas.ultimoJueves.toISOString().slice(0, 10));
         } catch (error) {
             console.warn('No se pudieron cargar entregas publicas', error);
         }
@@ -44,6 +56,8 @@ async function cargarReservasSocio() {
     const misReservasWrapper = document.getElementById('productosMisReservas');
     if (!appState.socioData?.id) {
         if (misReservasWrapper) misReservasWrapper.style.display = 'none';
+        appState.gramosReservadosCiclo = 0;
+        appState.cicloClubActual = null;
         await renderProximasEntregasEnProductos();
         return;
     }
@@ -53,26 +67,31 @@ async function cargarReservasSocio() {
     if (!container) return;
 
     appState.fechasEntrega = calcularFechasEntrega();
+    appState.cicloClubActual = obtenerCicloClub();
     const reservas = await obtenerReservas(appState.socioData.id);
-    const mesActual = appState.fechasEntrega.primerJueves.getMonth() + 1;
-    const anioActual = appState.fechasEntrega.primerJueves.getFullYear();
-    const reservaPrimer = reservas.find((r) => r.tipo_entrega === 'primer_jueves' && r.mes === mesActual && r.año === anioActual);
-    const reservaUltimo = reservas.find((r) => r.tipo_entrega === 'ultimo_jueves' && r.mes === mesActual && r.año === anioActual);
+    const reservaPrimer = reservas.find((r) => r.tipo_entrega === 'primer_jueves' && String(r.fecha_retiro) === appState.fechasEntrega.primerJueves.toISOString().slice(0, 10));
+    const reservaUltimo = reservas.find((r) => r.tipo_entrega === 'ultimo_jueves' && String(r.fecha_retiro) === appState.fechasEntrega.ultimoJueves.toISOString().slice(0, 10));
     const puedePrimer = puedeConfirmar(appState.fechasEntrega.primerJueves, configSistema.horasLimitePrimer);
     const puedeUltimo = puedeConfirmar(appState.fechasEntrega.ultimoJueves, configSistema.horasLimiteUltimo);
+    const gramosReservadosCiclo = sumarGramosReservadosEnCiclo(reservas, appState.cicloClubActual);
+    const gramosRestantesCiclo = Math.max(0, 40 - gramosReservadosCiclo);
+    appState.gramosReservadosCiclo = gramosReservadosCiclo;
 
     container.innerHTML = `
+        <div class="estado-reserva estado-confirmado" style="grid-column: 1 / -1; text-align: center;">
+            Disponible en este ciclo (${appState.cicloClubActual.etiqueta}): ${gramosRestantesCiclo}g de 40g
+        </div>
         <div class="entrega-card">
             <div class="entrega-titulo">Primer Jueves</div>
             <div class="entrega-fecha">${appState.fechasEntrega.primerJueves.toLocaleDateString('es')}</div>
             <div class="estado-reserva ${reservaPrimer?.estado === 'confirmado' ? 'estado-confirmado' : 'estado-pendiente'}">${reservaPrimer?.estado === 'confirmado' ? `Confirmado: ${reservaPrimer.cantidad_gramos}g` : 'Sin confirmar'}</div>
-            ${!reservaPrimer && puedePrimer ? `<div class="opciones-gramos" data-tipo="primer"><div class="opcion-gramo" data-gramos="20">20g</div><div class="opcion-gramo" data-gramos="40">40g</div></div>` : (!puedePrimer && !reservaPrimer ? '<div class="estado-reserva estado-pendiente">Plazo vencido</div>' : '')}
+            ${!reservaPrimer && puedePrimer ? construirOpcionesReservaHTML(gramosRestantesCiclo, 'primer') : (!puedePrimer && !reservaPrimer ? '<div class="estado-reserva estado-pendiente">Plazo vencido</div>' : '')}
         </div>
         <div class="entrega-card">
             <div class="entrega-titulo">Ultimo Jueves</div>
             <div class="entrega-fecha">${appState.fechasEntrega.ultimoJueves.toLocaleDateString('es')}</div>
             <div class="estado-reserva ${reservaUltimo?.estado === 'confirmado' ? 'estado-confirmado' : 'estado-pendiente'}">${reservaUltimo?.estado === 'confirmado' ? `Confirmado: ${reservaUltimo.cantidad_gramos}g` : 'Sin confirmar'}</div>
-            ${!reservaUltimo && puedeUltimo ? `<div class="opciones-gramos" data-tipo="ultimo"><div class="opcion-gramo" data-gramos="20">20g</div><div class="opcion-gramo" data-gramos="40">40g</div></div>` : (!puedeUltimo && !reservaUltimo ? '<div class="estado-reserva estado-pendiente">Plazo vencido</div>' : '')}
+            ${!reservaUltimo && puedeUltimo ? construirOpcionesReservaHTML(gramosRestantesCiclo, 'ultimo') : (!puedeUltimo && !reservaUltimo ? '<div class="estado-reserva estado-pendiente">Plazo vencido</div>' : '')}
         </div>
     `;
 
@@ -112,6 +131,15 @@ async function confirmarReservaHandler(tipo, gramos) {
         mostrarMensaje('El plazo expiro', false);
         return;
     }
+
+    const reservas = await obtenerReservas(appState.socioData.id);
+    const cicloActual = appState.cicloClubActual || obtenerCicloClub();
+    const gramosReservadosCiclo = sumarGramosReservadosEnCiclo(reservas, cicloActual);
+    if (gramosReservadosCiclo + gramos > 40) {
+        mostrarMensaje(`No podes superar 40g por ciclo. Te quedan ${Math.max(0, 40 - gramosReservadosCiclo)}g.`, false);
+        return;
+    }
+
     const resultado = await confirmarReserva(appState.socioData.id, gramos, tipo, fechaEntrega);
     if (resultado.success) {
         mostrarMensaje(`Reserva confirmada: ${gramos}g`, true);

@@ -213,11 +213,11 @@ async function obtenerReservas(socioId) {
 // Confirmar reserva
 async function confirmarReserva(socioId, gramos, tipo, fechaRetiro) {
     try {
-        const hoy = new Date();
+        const fechaReserva = new Date(fechaRetiro);
         const reserva = {
             socio_id: socioId,
-            mes: hoy.getMonth() + 1,
-            año: hoy.getFullYear(),
+            mes: fechaReserva.getMonth() + 1,
+            año: fechaReserva.getFullYear(),
             cantidad_gramos: gramos,
             fecha_retiro: fechaRetiro,
             tipo_entrega: tipo === 'primer' ? 'primer_jueves' : 'ultimo_jueves',
