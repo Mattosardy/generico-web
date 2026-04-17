@@ -2,3 +2,6 @@ config.txt
 .env
 .env.local
 supabase/.temp/
+
+# Local Netlify folder
+.netlify

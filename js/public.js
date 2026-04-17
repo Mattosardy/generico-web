@@ -1,5 +1,22 @@
 const IMAGEN_DEFAULT_NOVEDAD = 'assets/images/sitio-en-construccion.png';
 
+function crearProductosDemoFallback() {
+    return Array.from({ length: 6 }, (_, indice) => {
+        const nombre = obtenerNombreVariedadDemo(indice);
+        return normalizarProductoDemo({
+            id: `demo-producto-${indice + 1}`,
+            nombre,
+            cepa: nombre,
+            descripcion: obtenerDescripcionVariedadDemo(indice),
+            indica_sativa: 'Perfil equilibrado',
+            imagen_url: JSON.stringify(obtenerGaleriaVariedadDemo(indice)),
+            disponible: true,
+            activo: true,
+            created_at: new Date(Date.now() + (indice * 1000)).toISOString()
+        }, indice);
+    });
+}
+
 function normalizarNoticiaDemo(noticia = {}) {
     const textoOriginal = `${noticia?.titulo || ''} ${noticia?.contenido || ''}`.toLowerCase();
     const esContenidoHeredado = textoOriginal.includes('cururu') || textoOriginal.includes('cururú');
@@ -163,12 +180,9 @@ async function cargarProductosPublicos() {
     if (!container) return;
 
     const productos = await obtenerProductos();
-    if (!productos?.length) {
-        container.innerHTML = '<p style="color: #c8d8b5;">No hay productos disponibles.</p>';
-        return;
-    }
+    const productosBase = productos?.length ? productos : crearProductosDemoFallback();
 
-    const productosConCalificaciones = await Promise.all(productos.map(async (producto, indiceOriginal) => {
+    const productosConCalificaciones = await Promise.all(productosBase.map(async (producto, indiceOriginal) => {
         const calificaciones = await obtenerCalificacionesProducto(producto.id);
         return {
             ...producto,
@@ -227,14 +241,25 @@ async function cargarProductosPublicos() {
 }
 
 window.mostrarMasInfo = async function(productoId) {
+    const productoEnMemoria = appState.catalogoProductos?.[productoId];
+
+    if (String(productoId).startsWith('demo-producto-') && productoEnMemoria) {
+        abrirModal(productoEnMemoria);
+        return;
+    }
+
     try {
         const { data, error } = await supabaseClient.from('productos').select('*').eq('id', productoId).single();
         if (error) throw error;
         if (data) {
-            const productoNormalizado = appState.catalogoProductos?.[productoId] || data;
+            const productoNormalizado = productoEnMemoria || data;
             abrirModal({ ...data, ...productoNormalizado });
         }
     } catch (error) {
+        if (productoEnMemoria) {
+            abrirModal(productoEnMemoria);
+            return;
+        }
         mostrarMensaje('No se pudo cargar la información del producto', false);
     }
 };
