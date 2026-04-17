@@ -1,0 +1,4 @@
+config.txt
+.env
+.env.local
+supabase/.temp/
