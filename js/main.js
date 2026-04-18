@@ -119,6 +119,7 @@ async function verificarSesion() {
 document.addEventListener('DOMContentLoaded', async () => {
     inicializarPlaceholders();
     if (typeof aplicarTemaDesdeLogo === 'function') aplicarTemaDesdeLogo();
+    if (typeof actualizarBotonesSesion === 'function') actualizarBotonesSesion(false);
 
     document.getElementById('btnLogin')?.addEventListener('click', iniciarSesion);
     document.getElementById('btnLogout')?.addEventListener('click', cerrarSesionHandler);
