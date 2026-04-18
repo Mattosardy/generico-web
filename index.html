@@ -733,7 +733,7 @@
                 padding:
                     calc(18px + env(safe-area-inset-top))
                     14px
-                    calc(118px + env(safe-area-inset-bottom))
+                    28px
                     14px;
             }
             .header {
@@ -743,8 +743,8 @@
                 transform: none;
                 width: calc(100% - 4px);
                 padding: 12px 14px;
-                flex-direction: row;
-                align-items: flex-start;
+                flex-direction: column;
+                align-items: stretch;
                 margin: 0 auto 16px;
                 border-radius: 26px;
                 background: rgba(83, 51, 34, 0.86);
@@ -753,15 +753,11 @@
             .header-left, .header-right {
                 width: 100%;
                 justify-content: space-between;
-                flex-wrap: nowrap;
+                flex-wrap: wrap;
                 gap: 12px;
             }
             .header-nav {
-                position: fixed;
-                left: 14px;
-                right: 14px;
-                bottom: calc(12px + env(safe-area-inset-bottom));
-                z-index: 1400;
+                position: static;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 10px;
@@ -773,11 +769,11 @@
                 backdrop-filter: blur(18px);
             }
             .header-nav .nav-btn {
-                flex: 1 1 calc(25% - 8px);
+                flex: 1 1 calc(50% - 6px);
             }
             .nav-session-btn {
                 display: inline-flex !important;
-                flex: 1 1 100% !important;
+                flex: 1 1 calc(50% - 6px) !important;
                 min-height: 50px;
                 border-radius: 18px;
                 flex-direction: row;
@@ -865,7 +861,7 @@
             .header { padding: 10px 12px; border-radius: 22px; }
             .header-nav { gap: 8px; }
             .header-nav .nav-btn {
-                flex-basis: calc(25% - 6px);
+                flex-basis: calc(50% - 4px);
             }
             .nav-btn {
                 text-align: center;
@@ -882,7 +878,7 @@
                 line-height: 1.1;
             }
             .nav-session-btn {
-                flex-basis: 100% !important;
+                flex-basis: calc(50% - 4px) !important;
                 min-height: 48px;
                 font-size: 0.78rem;
                 padding: 10px 12px;
