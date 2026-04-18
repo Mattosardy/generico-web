@@ -744,26 +744,17 @@
                 width: calc(100% - 4px);
                 padding: 12px 14px;
                 flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
+                align-items: flex-start;
                 margin: 0 auto 16px;
                 border-radius: 26px;
                 background: rgba(83, 51, 34, 0.86);
                 box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
             }
             .header-left, .header-right {
-                width: auto;
+                width: 100%;
+                justify-content: space-between;
                 flex-wrap: nowrap;
                 gap: 12px;
-            }
-            .header-left {
-                min-width: 0;
-                flex: 1 1 auto;
-                justify-content: flex-start;
-            }
-            .header-right {
-                flex: 0 0 auto;
-                justify-content: flex-end;
             }
             .header-nav {
                 position: fixed;
@@ -798,21 +789,18 @@
                 border-radius: 18px;
             }
             .user-info span {
-                max-width: 108px;
+                max-width: 84px;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
             .btn-inicio, .btn-cerrar {
                 width: auto;
-                min-width: auto;
-                padding: 10px 14px;
+                min-width: 44px;
+                padding: 10px 12px;
                 border-radius: 14px;
-                font-size: 0.84rem;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
             }
+            .btn-inicio { font-size: 0; }
+            .btn-cerrar { font-size: 0; }
             .btn-inicio i, .btn-cerrar i {
                 margin: 0;
                 font-size: 1rem;
@@ -877,13 +865,6 @@
             .user-info {
                 padding: 8px 10px;
                 gap: 8px;
-            }
-            .user-info span {
-                display: none;
-            }
-            .btn-inicio, .btn-cerrar {
-                padding: 9px 11px;
-                font-size: 0.78rem;
             }
             .productos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
             .producto-miniatura { height: 132px; }
