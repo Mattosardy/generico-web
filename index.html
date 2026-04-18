@@ -784,7 +784,10 @@
             .logo h1 { font-size: 1.45rem; }
             .logo-mark { width: 34px; height: 34px; }
             .logo p {
-                display: none;
+                font-size: 0.78rem;
+                color: var(--text-muted);
+                line-height: 1.35;
+                max-width: 24ch;
             }
             .user-info {
                 width: auto;
@@ -794,9 +797,10 @@
                 gap: 8px;
                 border-radius: 18px;
             }
-            .user-info span,
-            #userName {
-                display: none;
+            .user-info span {
+                max-width: 108px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .btn-inicio, .btn-cerrar {
                 width: auto;
@@ -873,6 +877,9 @@
             .user-info {
                 padding: 8px 10px;
                 gap: 8px;
+            }
+            .user-info span {
+                display: none;
             }
             .btn-inicio, .btn-cerrar {
                 padding: 9px 11px;
