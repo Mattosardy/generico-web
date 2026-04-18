@@ -181,6 +181,7 @@ async function cargarProductosPublicos() {
 
     const productos = await obtenerProductos();
     const productosBase = productos?.length ? productos : crearProductosDemoFallback();
+    const usarModoDemo = !productos?.length;
 
     const productosConCalificaciones = await Promise.all(productosBase.map(async (producto, indiceOriginal) => {
         const calificaciones = await obtenerCalificacionesProducto(producto.id);
@@ -193,9 +194,11 @@ async function cargarProductosPublicos() {
     }));
 
     const productosOrdenados = ordenarProductosParaCatalogo(productosConCalificaciones);
-    const productosVisibles = productosOrdenados
-        .slice(0, 6)
-        .map((producto, indice) => normalizarProductoDemo(producto, indice));
+    const productosVisibles = usarModoDemo
+        ? productosOrdenados
+            .slice(0, 6)
+            .map((producto, indice) => normalizarProductoDemo(producto, indice))
+        : productosOrdenados;
 
     appState.catalogoProductos = productosVisibles.reduce((acc, producto) => {
         acc[producto.id] = producto;

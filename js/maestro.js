@@ -63,9 +63,9 @@ async function cargarMaestroHistoria() {
         <div id="historiaMensaje" style="margin-top: 15px;"></div>
     `;
 
-    document.getElementById('historiaImagenesFiles')?.addEventListener('change', (event) => {
-        renderizarPreviewImagenes(event.target.files, 'historiaImagenesPreview');
-    });
+    if (typeof configurarInputImagenesConLimite === 'function') {
+        configurarInputImagenesConLimite('historiaImagenesFiles', 'historiaImagenesPreview', 'historia');
+    }
 }
 
 window.guardarHistoriaMaestro = async function() {
@@ -77,7 +77,9 @@ window.guardarHistoriaMaestro = async function() {
         .split(/\r?\n/)
         .map((item) => item.trim())
         .filter(Boolean);
-    const archivos = document.getElementById('historiaImagenesFiles')?.files;
+    const archivos = typeof obtenerArchivosAcumulados === 'function'
+        ? obtenerArchivosAcumulados('historiaImagenesFiles')
+        : document.getElementById('historiaImagenesFiles')?.files;
     const mensajeDiv = document.getElementById('historiaMensaje');
 
     if (!texto) {

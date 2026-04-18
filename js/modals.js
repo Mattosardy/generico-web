@@ -113,14 +113,27 @@ window.cambiarImagenGaleria = function(direccion) {
     if (nuevoIndice < 0 || nuevoIndice >= appState.galeriaActual.imagenes.length) return;
     appState.galeriaActual.indice = nuevoIndice;
     const imagenPrincipal = document.getElementById('modalImagenGaleria');
-    if (imagenPrincipal) imagenPrincipal.src = appState.galeriaActual.imagenes[nuevoIndice];
+    if (imagenPrincipal) {
+        imagenPrincipal.onerror = function onErrorImagen() {
+            this.onerror = null;
+            this.src = obtenerImagenFallback(appState.productoModalActual) || crearPlaceholderConstruccion('Sitio en construcción');
+        };
+        imagenPrincipal.src = appState.galeriaActual.imagenes[nuevoIndice];
+    }
     actualizarControlesGaleriaProducto();
 };
 
 window.irAImagen = function(indice) {
     if (!appState.galeriaActual?.imagenes?.length) return;
     appState.galeriaActual.indice = indice;
-    document.getElementById('modalImagenGaleria').src = appState.galeriaActual.imagenes[indice];
+    const imagenPrincipal = document.getElementById('modalImagenGaleria');
+    if (imagenPrincipal) {
+        imagenPrincipal.onerror = function onErrorImagen() {
+            this.onerror = null;
+            this.src = obtenerImagenFallback(appState.productoModalActual) || crearPlaceholderConstruccion('Sitio en construcción');
+        };
+        imagenPrincipal.src = appState.galeriaActual.imagenes[indice];
+    }
     document.querySelectorAll('.galeria-dot').forEach((dot, index) => {
         dot.style.background = index === indice ? '#7ca35a' : 'rgba(255,255,255,0.5)';
     });
@@ -133,7 +146,13 @@ window.seleccionarImagenProducto = function(indice) {
 
     appState.galeriaActual.indice = indice;
     const principal = document.getElementById('modalImagenGaleria');
-    if (principal) principal.src = imagen;
+    if (principal) {
+        principal.onerror = function onErrorImagen() {
+            this.onerror = null;
+            this.src = obtenerImagenFallback(appState.productoModalActual) || crearPlaceholderConstruccion('Sitio en construcción');
+        };
+        principal.src = imagen;
+    }
     actualizarControlesGaleriaProducto();
 };
 
@@ -180,7 +199,7 @@ async function abrirModal(producto) {
             console.warn('No se pudo cargar la galeria del producto', error);
         }
     }
-    if (imagenesBase.length) imagenesArray = imagenesBase;
+    if (!imagenesArray.length && imagenesBase.length) imagenesArray = imagenesBase;
     if (!imagenesArray.length) imagenesArray = [obtenerImagenFallback(producto) || crearPlaceholderConstruccion('Sitio en construcción')];
 
     appState.galeriaActual = { imagenes: imagenesArray, indice: 0, productoId: producto.id };

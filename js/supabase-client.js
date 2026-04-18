@@ -155,7 +155,9 @@ async function obtenerUsuarioActual() {
         if (error) throw error;
         return user;
     } catch (error) {
-        console.error('Error al obtener usuario:', error.message);
+        if (error?.message !== 'Auth session missing!') {
+            console.error('Error al obtener usuario:', error.message);
+        }
         return null;
     }
 }

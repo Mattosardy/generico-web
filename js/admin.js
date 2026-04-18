@@ -22,6 +22,7 @@ function renderizarPreviewImagenes(files, previewId) {
 }
 
 const MAX_IMAGENES_POR_CONTENIDO = 3;
+const archivosAcumuladosPorInput = {};
 
 function normalizarUrlsImagenes(value) {
     return String(value || '')
@@ -37,18 +38,55 @@ function validarMaximoImagenes(urls = [], files = null, contexto = 'contenido') 
     }
 }
 
+function obtenerClaveArchivo(file) {
+    return [file?.name || '', file?.size || 0, file?.lastModified || 0].join('__');
+}
+
+function sincronizarInputConArchivos(input, files = []) {
+    if (!input) return;
+    const dataTransfer = new DataTransfer();
+    Array.from(files || []).forEach((file) => dataTransfer.items.add(file));
+    input.files = dataTransfer.files;
+}
+
+function obtenerArchivosAcumulados(inputId) {
+    return archivosAcumuladosPorInput[inputId] || [];
+}
+
+function limpiarArchivosAcumulados(inputId, previewId = null) {
+    archivosAcumuladosPorInput[inputId] = [];
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = '';
+        sincronizarInputConArchivos(input, []);
+    }
+    if (previewId) renderizarPreviewImagenes([], previewId);
+}
+
 function configurarInputImagenesConLimite(inputId, previewId, contexto) {
     const input = document.getElementById(inputId);
     if (!input) return;
+    archivosAcumuladosPorInput[inputId] = [];
     input.addEventListener('change', (event) => {
-        const files = event.target.files;
-        if ((files?.length || 0) > MAX_IMAGENES_POR_CONTENIDO) {
+        const nuevos = Array.from(event.target.files || []);
+        if (!nuevos.length) return;
+
+        const actuales = obtenerArchivosAcumulados(inputId);
+        const mapa = new Map(actuales.map((file) => [obtenerClaveArchivo(file), file]));
+        nuevos.forEach((file) => {
+            mapa.set(obtenerClaveArchivo(file), file);
+        });
+        const acumulados = Array.from(mapa.values());
+
+        if (acumulados.length > MAX_IMAGENES_POR_CONTENIDO) {
             mostrarMensaje(`Solo podes seleccionar hasta ${MAX_IMAGENES_POR_CONTENIDO} imagenes para ${contexto}.`, false);
-            event.target.value = '';
-            renderizarPreviewImagenes([], previewId);
+            sincronizarInputConArchivos(event.target, actuales);
             return;
         }
-        renderizarPreviewImagenes(files, previewId);
+
+        archivosAcumuladosPorInput[inputId] = acumulados;
+        sincronizarInputConArchivos(event.target, acumulados);
+        renderizarPreviewImagenes(acumulados, previewId);
     });
 }
 
@@ -58,7 +96,14 @@ async function subirMultiplesImagenes(bucket, files, prefijo) {
         const ext = file.name.split('.').pop();
         const fileName = `${prefijo}_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
         const { error } = await supabaseClient.storage.from(bucket).upload(fileName, file);
-        if (error) throw error;
+        if (error) {
+            const mensaje = String(error.message || '').toLowerCase();
+            const bucketFaltante = error.statusCode === '400' || error.statusCode === 400 || mensaje.includes('bucket') || mensaje.includes('not found');
+            if (bucketFaltante) {
+                throw new Error(`No existe o no esta listo el bucket "${bucket}" en Supabase Storage.`);
+            }
+            throw error;
+        }
         imagenes.push(supabaseClient.storage.from(bucket).getPublicUrl(fileName).data.publicUrl);
     }
     return imagenes;
