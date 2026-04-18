@@ -16,6 +16,19 @@ function mostrarPanelForgot() {
     document.getElementById('panelForgot').style.display = 'block';
 }
 
+function actualizarBotonesSesion(autenticado) {
+    const loginVisible = autenticado ? 'none' : 'inline-block';
+    const logoutVisible = autenticado ? 'inline-block' : 'none';
+    ['btnLogin', 'mobileBtnLogin'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = loginVisible;
+    });
+    ['btnLogout', 'mobileBtnLogout'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = logoutVisible;
+    });
+}
+
 async function actualizarUIporRol() {
     const usuario = await obtenerUsuarioActual();
     appState.usuarioActual = usuario;
@@ -32,16 +45,14 @@ async function actualizarUIporRol() {
             appState.socioData = null;
             document.getElementById('userName').innerHTML = `<i class="fas fa-user"></i> ${escapeHtml(usuario.email)}`;
         }
-        document.getElementById('btnLogin').style.display = 'none';
-        document.getElementById('btnLogout').style.display = 'inline-block';
+        actualizarBotonesSesion(true);
     } else {
         appState.rolUsuario = 'invitado';
         appState.socioData = null;
         appState.gramosReservadosCiclo = 0;
         appState.cicloClubActual = null;
         document.getElementById('userName').innerHTML = '<i class="fas fa-user"></i> Invitado';
-        document.getElementById('btnLogin').style.display = 'inline-block';
-        document.getElementById('btnLogout').style.display = 'none';
+        actualizarBotonesSesion(false);
         mostrarPanelLogin();
     }
 
