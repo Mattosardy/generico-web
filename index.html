@@ -762,8 +762,8 @@
                 right: 14px;
                 bottom: calc(12px + env(safe-area-inset-bottom));
                 z-index: 1400;
-                display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
+                display: flex;
+                flex-wrap: wrap;
                 gap: 10px;
                 padding: 10px;
                 border-radius: 28px;
@@ -772,6 +772,19 @@
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
                 backdrop-filter: blur(18px);
             }
+            .header-nav .nav-btn {
+                flex: 1 1 calc(25% - 8px);
+            }
+            .nav-session-btn {
+                display: inline-flex !important;
+                flex: 1 1 100% !important;
+                min-height: 50px;
+                border-radius: 18px;
+                flex-direction: row;
+                gap: 8px;
+                font-size: 0.82rem;
+                padding: 10px 14px;
+            }
             .logo h1 { font-size: 1.45rem; }
             .logo-mark { width: 34px; height: 34px; }
             .logo p {
@@ -779,6 +792,9 @@
                 color: var(--text-muted);
                 line-height: 1.35;
                 max-width: 24ch;
+            }
+            .header-right {
+                display: none;
             }
             .user-info {
                 width: auto;
@@ -847,7 +863,10 @@
             .section { padding: 18px 14px; border-radius: 20px; }
             .section-title { font-size: 1.2rem; gap: 8px; }
             .header { padding: 10px 12px; border-radius: 22px; }
-            .header-nav { gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            .header-nav { gap: 8px; }
+            .header-nav .nav-btn {
+                flex-basis: calc(25% - 6px);
+            }
             .nav-btn {
                 text-align: center;
                 padding: 10px 6px;
@@ -861,6 +880,12 @@
                 gap: 6px;
                 white-space: normal;
                 line-height: 1.1;
+            }
+            .nav-session-btn {
+                flex-basis: 100% !important;
+                min-height: 48px;
+                font-size: 0.78rem;
+                padding: 10px 12px;
             }
             .user-info {
                 padding: 8px 10px;
@@ -997,6 +1022,8 @@
                 <button class="nav-btn" data-section="productos"><i class="fas fa-leaf"></i><span>Variedades</span></button>
                 <button class="nav-btn admin-only" data-section="admin" style="display: none;"><i class="fas fa-sliders"></i><span>Admin</span></button>
                 <button class="nav-btn maestro-only" data-section="maestro" style="display: none;"><i class="fas fa-crown"></i><span>Maestro</span></button>
+                <button id="mobileBtnLogin" class="nav-btn nav-session-btn" style="display: none;"><i class="fas fa-sign-in-alt"></i><span>Iniciar Sesión</span></button>
+                <button id="mobileBtnLogout" class="nav-btn nav-session-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span></button>
             </div>
         </div>
         <div class="header-right">
