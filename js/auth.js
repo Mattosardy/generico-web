@@ -17,16 +17,15 @@ function mostrarPanelForgot() {
 }
 
 function actualizarBotonesSesion(autenticado) {
-    const mostrarLogin = autenticado ? 'none' : 'inline-block';
-    const mostrarLogout = autenticado ? 'inline-block' : 'none';
-    ['btnLogin', 'mobileBtnLogin'].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = mostrarLogin;
-    });
-    ['btnLogout', 'mobileBtnLogout'].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = mostrarLogout;
-    });
+    const desktopLogin = document.getElementById('btnLogin');
+    const mobileLogin = document.getElementById('mobileBtnLogin');
+    const desktopLogout = document.getElementById('btnLogout');
+    const mobileLogout = document.getElementById('mobileBtnLogout');
+
+    if (desktopLogin) desktopLogin.style.display = autenticado ? 'none' : 'inline-block';
+    if (mobileLogin) mobileLogin.style.display = autenticado ? 'none' : 'flex';
+    if (desktopLogout) desktopLogout.style.display = autenticado ? 'inline-block' : 'none';
+    if (mobileLogout) mobileLogout.style.display = autenticado ? 'flex' : 'none';
 }
 
 async function actualizarUIporRol() {
