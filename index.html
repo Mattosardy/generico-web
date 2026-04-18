@@ -63,15 +63,15 @@
             z-index: 1;
             max-width: 1400px;
             margin: 0 auto;
-            padding: calc(96px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom)) 20px;
+            padding: calc(20px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom)) 20px;
         }
         .header {
-            position: fixed;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1200;
-            width: min(calc(100% - 32px), 1400px);
+            position: relative;
+            top: auto;
+            left: auto;
+            transform: none;
+            z-index: 1;
+            width: 100%;
             background: var(--header-bg);
             backdrop-filter: blur(15px);
             border-radius: 24px;
@@ -737,8 +737,8 @@
                     14px;
             }
             .header {
-                position: sticky;
-                top: calc(10px + env(safe-area-inset-top));
+                position: relative;
+                top: auto;
                 left: auto;
                 transform: none;
                 width: calc(100% - 4px);
