@@ -122,11 +122,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('btnLogin')?.addEventListener('click', iniciarSesion);
     document.getElementById('btnLogout')?.addEventListener('click', cerrarSesionHandler);
-    document.getElementById('mobileBtnLogin')?.addEventListener('click', iniciarSesion);
-    document.getElementById('mobileBtnLogout')?.addEventListener('click', cerrarSesionHandler);
 
     document.querySelectorAll('.nav-btn').forEach((btn) => {
-        if (btn.id === 'mobileBtnLogin' || btn.id === 'mobileBtnLogout') return;
         btn.addEventListener('click', () => mostrarSeccion(btn.dataset.section));
     });
 
